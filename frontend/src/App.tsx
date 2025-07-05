@@ -1,18 +1,37 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MusicCard from "./components/MusicCard";
 import { Button } from "./components/ui/button";
 import { Input } from "./components/ui/input";
 import typeMusicCard from "./types/typeMusicCard";
 
 function App() {
-  const [musics, setMusics] = useState<typeMusicCard[]>([
-    {
-      name: "Leandro e Leonardo - Pensa em Mim",
-      progress: Math.round(Math.random() * 100),
-      status: "loading",
-    },
-  ]);
+  const [musics, setMusics] = useState<typeMusicCard[]>([]);
   const [url, setUrl] = useState<string>("");
+
+  useEffect(() => {
+    const es = new EventSource("http://localhost:3000/progress");
+    es.onmessage = (e) => {
+      const updates = JSON.parse(e.data) as Record<string, Partial<typeMusicCard>>;
+      setMusics((prev) =>
+        prev.map((m) =>
+          updates[m.jobId] ? { ...m, ...(updates[m.jobId] as any) } : m
+        )
+      );
+    };
+    return () => es.close();
+  }, []);
+
+  const startDownload = async () => {
+    if (!url) return;
+    const res = await fetch('http://localhost:3000/download', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url })
+    });
+    const { jobId } = await res.json();
+    setMusics(prev => [...prev, { jobId, percent: 0, status: 'queued' }]);
+    setUrl('');
+  };
 
   return (
     <div className="bg-zinc-900 flex justify-center items-center h-dvh text-gray-300">
@@ -28,20 +47,13 @@ function App() {
             value={url}
             onChange={(e) => setUrl(e.target.value)}
           />
-          <Button type="submit" variant="green">
+          <Button type="submit" variant="green" onClick={startDownload}>
             Download
           </Button>
         </div>
 
         {musics &&
-          musics.map((item, i) => (
-            <MusicCard
-              name={item.name}
-              progress={item.progress}
-              status={item.status}
-              key={i}
-            />
-          ))}
+          musics.map((item) => <MusicCard key={item.jobId} {...item} />)}
       </div>
     </div>
   );

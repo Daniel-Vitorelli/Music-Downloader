@@ -1,7 +1,9 @@
 interface typeMusicCard {
-  name: string,
-  progress: number,
-  status: string
+  filename?: string,
+  percent: number,
+  status: 'queued' | 'downloading' | 'done' | 'error';
+  downloadUrl?: string;
+  jobId: string;
 }
 
 export default typeMusicCard;
