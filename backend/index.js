@@ -8,7 +8,7 @@ const cors = require('cors');
 const { v4: uuidv4 } = require('uuid');
 
 const app = express();
-const PORT = 3000;
+const port = process.env.port ? Number(process.env.port) : 3000;
 
 // Configurações
 const DOWNLOAD_DIR = path.join(__dirname, 'downloads');
@@ -152,6 +152,6 @@ app.get('/download-file/:filename', (req, res) => {
   res.download(filePath);
 });
 
-app.listen(PORT, () => {
-  console.log(`🚀 Backend rodando em http://localhost:${PORT}`);
+app.listen(port, () => {
+  console.log(`🚀 Backend rodando em http://localhost:${port}`);
 });
