@@ -9,9 +9,12 @@ import { Button } from "./ui/button";
 import { Download } from "lucide-react";
 import { Progress } from "./ui/progress";
 import typeMusicCard from "../types/typeMusicCard";
+
 function MusicCard({ filename, percent, status, downloadUrl }: typeMusicCard) {
   const displayName = filename ? filename.replace(/\.mp3$/, "") : "…";
   return (
+    <>
+    
     <Card>
       <CardHeader>
         <CardTitle>{displayName}</CardTitle>
@@ -29,6 +32,7 @@ function MusicCard({ filename, percent, status, downloadUrl }: typeMusicCard) {
         </CardAction>
       </CardHeader>
     </Card>
+    </>
   );
 }
 
