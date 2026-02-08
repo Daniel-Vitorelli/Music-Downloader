@@ -8,7 +8,7 @@ server.get('/', async (request, reply) => {
 
 const port = process.env.PORT || 8080;
 
-server.listen({ port: +port }, (err, address) => {
+server.listen({ port: +port, host: "0.0.0.0" }, (err, address) => {
   if (err) {
     console.error(err)
     process.exit(1)
