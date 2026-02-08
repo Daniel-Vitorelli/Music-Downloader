@@ -1,8 +1,14 @@
 import fastify from 'fastify';
+import path from 'node:path';
+import { ensureDir } from './utils/ensureDir.js';
+import { fileURLToPath } from 'url';
+import { downloadRoute } from './routes/download.js';
 const server = fastify();
-server.get('/', async (request, reply) => {
-    return 'Server Listening';
-});
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+server.downloadsDir = path.join(__dirname, '..', 'downloads');
+ensureDir(server.downloadsDir);
+server.register(downloadRoute);
 const port = process.env.PORT || 8080;
 server.listen({ port: +port, host: "0.0.0.0" }, (err, address) => {
     if (err) {
