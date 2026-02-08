@@ -6,7 +6,9 @@ server.get('/', async (request, reply) => {
   return 'Server Listening'
 })
 
-server.listen({ port: 8080 }, (err, address) => {
+const port = process.env.PORT || 8080;
+
+server.listen({ port: +port }, (err, address) => {
   if (err) {
     console.error(err)
     process.exit(1)
