@@ -40,5 +40,12 @@
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true,
-  }
+
+    // New Options
+    "allowJs": true,
+    "checkJs": false,
+    "moduleResolution": "nodenext",
+    "esModuleInterop": true
+  },
+  "include": ["**/*"]
 }

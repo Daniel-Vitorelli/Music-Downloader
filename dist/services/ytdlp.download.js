@@ -20,4 +20,4 @@ export function downloadVideo(url, outputPath, format, resolution) {
         });
     });
 }
-//# sourceMappingURL=ytdlp.js.map
+//# sourceMappingURL=ytdlp.download.js.map
