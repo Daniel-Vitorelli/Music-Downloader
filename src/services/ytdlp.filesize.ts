@@ -1,9 +1,9 @@
 import { spawn } from "node:child_process";
 
 export async function getVideoSize(
-  url: string,
-  format?: string,
-  resolution?: string,
+  video_id: string,
+  format_id: string,
+  ext: string
 ): Promise<number> {
   let output = "";
   let errorOutput = "";
@@ -14,12 +14,10 @@ export async function getVideoSize(
       "--print",
       "%(filesize,filesize_approx)r",
       "-f",
-      format && resolution
-        ? `bestvideo[height=${resolution}][ext=${format}]+bestaudio[ext=${
-            format === "webm" ? "webm" : "m4a"
-          }]/best[ext=${format}]/best`
-        : "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best",
-      url,
+      `${format_id}+bestaudio[ext=${ext === "mp4" ? "m4a" : "webm"}]/bestaudio`,
+      "--merge-output-format",
+      ext,
+      video_id
     ]);
 
     ytdlp.stdout.on("data", (data) => {
@@ -38,8 +36,5 @@ export async function getVideoSize(
       }
     });
   });
-
   return Number(output);
 }
-
-//ytdlp --simulate --print "%(filesize,filesize_approx)r" -f "bestvideo[height<=1080]+bestaudio" --merge-output-format mp4 https://youtu.be/apK2jCrfnsk

@@ -1,32 +1,29 @@
 import { spawn } from "node:child_process";
 
 export function downloadVideo(
-  url: string,
+  video_id: string,
   outputPath: string,
-  format?: string,
-  resolution?: string,
+  format_id: string,
+  ext: string,
   onProgress?: (data: {
     percent?: number;
     speed?: string;
     eta?: string;
     raw?: string;
-  }) => void
+  }) => void,
 ): Promise<void> {
   return new Promise((resolve, reject) => {
-    const formatString =
-      format && resolution
-        ? `bestvideo[height=${resolution}][ext=${format}]+bestaudio[ext=${format === "webm" ? "webm" : "m4a"}]/best[ext=${format}]/best`
-        : "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best";
-
     const ytdlp = spawn("yt-dlp", [
       "-f",
-      formatString,
+      `${format_id}+bestaudio[ext=${ext === "mp4" ? "m4a" : "webm"}]/bestaudio`,
+      "--merge-output-format",
+      ext,
       "-o",
       outputPath,
       "--newline",
       "--progress-template",
       "%(progress._percent_str)s|%(progress._speed_str)s|%(progress._eta_str)s",
-      url,
+      video_id,
     ]);
 
     ytdlp.stdout.on("data", (chunk) => {

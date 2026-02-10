@@ -16,6 +16,7 @@ export async function previewRoute(server: FastifyInstance) {
       const output = await getVideoInfo(url)
 
       const data = JSON.parse(output) as {
+        id: string;
         title: string;
         thumbnail: string;
         filesize: number;
@@ -25,6 +26,7 @@ export async function previewRoute(server: FastifyInstance) {
 
       const payload: ReplyPayload = {
         message: "Preview concluído",
+        id: data.id,
         title: data.title,
         thumbnail: data.thumbnail,
         size: data.filesize || data.filesize_approx,
