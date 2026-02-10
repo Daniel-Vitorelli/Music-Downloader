@@ -4,6 +4,7 @@ import { ensureDir } from "./utils/ensureDir.js";
 import { fileURLToPath } from "url";
 import { downloadRoute } from "./routes/download.js";
 import { previewRoute } from "./routes/preview.js";
+import sse from "@fastify/sse";
 
 const server = fastify();
 
@@ -19,6 +20,7 @@ const __dirname = path.dirname(__filename);
 server.downloadsDir = path.join(__dirname, "..", "downloads");
 ensureDir(server.downloadsDir);
 
+server.register(sse as any);
 server.register(downloadRoute);
 server.register(previewRoute);
 
